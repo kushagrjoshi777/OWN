@@ -1,55 +1,88 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 export default function ContactPage() {
-  return (
-    <div className="bg-creamWhite min-h-screen pt-24">
-      <section className="bg-warmBlack py-24 px-6 text-center relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'linear-gradient(#C9A96E 1px, transparent 1px), linear-gradient(90deg, #C9A96E 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-        <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="font-serif text-[clamp(3rem,7vw,6rem)] text-creamWhite relative z-10">
-          Get In Touch
-        </motion.h1>
-        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-creamWhite/50 font-sans text-sm mt-4 relative z-10">
-          We'd love to hear from you.
-        </motion.p>
-      </section>
+  const [focused, setFocused] = useState<string | null>(null);
 
-      <section className="py-24 px-6 max-w-2xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-col gap-6">
-          {[
-            { label: 'Your Name', type: 'text', placeholder: 'Riya Sharma' },
-            { label: 'Email', type: 'email', placeholder: 'hello@example.com' },
-            { label: 'Subject', type: 'text', placeholder: 'I have a question about...' },
-          ].map((field) => (
-            <div key={field.label} className="flex flex-col gap-2">
-              <label className="font-sans text-xs tracking-[0.2em] uppercase text-warmBlack/50 font-semibold">{field.label}</label>
-              <input
-                type={field.type}
-                placeholder={field.placeholder}
-                className="w-full border border-warmBlack/20 bg-transparent px-4 py-3 font-sans text-sm text-warmBlack placeholder:text-warmBlack/30 focus:outline-none focus:border-mainCharacter transition-colors"
-              />
-            </div>
-          ))}
-          <div className="flex flex-col gap-2">
-            <label className="font-sans text-xs tracking-[0.2em] uppercase text-warmBlack/50 font-semibold">Message</label>
-            <textarea
-              rows={5}
-              placeholder="Your message..."
-              className="w-full border border-warmBlack/20 bg-transparent px-4 py-3 font-sans text-sm text-warmBlack placeholder:text-warmBlack/30 focus:outline-none focus:border-mainCharacter transition-colors resize-none"
+  return (
+    <div className="min-h-screen bg-[#1E1B4B] pt-32 pb-24 px-6 md:px-16 flex flex-col font-sans items-center overflow-hidden relative">
+      
+      {/* Decorative Blur Orbs */}
+      <div className="absolute top-[10%] left-[20%] w-[40vw] h-[40vw] bg-[#7286D3] rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none" />
+      <div className="absolute bottom-[20%] right-[10%] w-[30vw] h-[30vw] bg-[#E5E0FF] rounded-full mix-blend-screen filter blur-[120px] opacity-10 pointer-events-none" />
+
+      {/* Header */}
+      <motion.div 
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-4xl text-center mb-16 md:mb-24 relative z-10"
+      >
+        <h4 className="text-[#8EA7E9] text-sm tracking-[0.3em] uppercase mb-4">Inquiries & Love Letters</h4>
+        <h1 className="font-serif italic text-6xl md:text-8xl lg:text-[10rem] text-[#E5E0FF] leading-[0.85] tracking-tighter">
+          Connect.
+        </h1>
+      </motion.div>
+
+      {/* Form Container */}
+      <motion.div 
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-2xl relative z-10"
+      >
+        <form className="flex flex-col gap-10">
+          
+          <div className="relative">
+            <label className={`absolute left-0 transition-all duration-300 font-serif italic text-[#8EA7E9] ${focused === 'name' ? '-top-6 text-sm opacity-100' : 'top-2 text-xl opacity-60'}`}>
+              Your Name
+            </label>
+            <input 
+              type="text" 
+              onFocus={() => setFocused('name')}
+              onBlur={(e) => !e.target.value && setFocused(null)}
+              className="w-full bg-transparent border-b border-[#8EA7E9]/30 py-3 px-0 text-[#E5E0FF] text-xl font-sans font-light focus:outline-none focus:border-[#E5E0FF] transition-colors"
             />
           </div>
-          <button className="bg-warmBlack text-creamWhite font-sans text-xs tracking-[0.2em] uppercase py-4 font-semibold hover:bg-warmBlack/80 transition-colors">
-            Send Message
-          </button>
-        </motion.div>
 
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="mt-16 pt-12 border-t border-warmBlack/10 text-center">
-          <p className="font-sans text-sm text-warmBlack/50 mb-2">Or reach us directly</p>
-          <a href="mailto:hello@ownbodycare.in" className="font-serif text-mainCharacter text-lg hover:underline">hello@ownbodycare.in</a>
-          <p className="font-sans text-xs text-warmBlack/30 mt-6 tracking-widest uppercase">Follow @ownbodycare on Instagram</p>
-        </motion.div>
-      </section>
+          <div className="relative">
+            <label className={`absolute left-0 transition-all duration-300 font-serif italic text-[#8EA7E9] ${focused === 'email' ? '-top-6 text-sm opacity-100' : 'top-2 text-xl opacity-60'}`}>
+              Email Address
+            </label>
+            <input 
+              type="email" 
+              onFocus={() => setFocused('email')}
+              onBlur={(e) => !e.target.value && setFocused(null)}
+              className="w-full bg-transparent border-b border-[#8EA7E9]/30 py-3 px-0 text-[#E5E0FF] text-xl font-sans font-light focus:outline-none focus:border-[#E5E0FF] transition-colors"
+            />
+          </div>
+
+          <div className="relative mt-4">
+            <label className={`absolute left-0 transition-all duration-300 font-serif italic text-[#8EA7E9] ${focused === 'message' ? '-top-6 text-sm opacity-100' : 'top-2 text-xl opacity-60'}`}>
+              What's on your mind?
+            </label>
+            <textarea 
+              rows={4}
+              onFocus={() => setFocused('message')}
+              onBlur={(e) => !e.target.value && setFocused(null)}
+              className="w-full bg-transparent border-b border-[#8EA7E9]/30 py-3 px-0 text-[#E5E0FF] text-xl font-sans font-light focus:outline-none focus:border-[#E5E0FF] transition-colors resize-none"
+            />
+          </div>
+
+          <motion.button 
+            type="button"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="mt-8 self-end w-full md:w-auto px-12 py-5 bg-[#E5E0FF] text-[#1E1B4B] uppercase tracking-[0.2em] text-xs font-semibold rounded-full hover:bg-white transition-colors"
+          >
+            Send Message
+          </motion.button>
+
+        </form>
+      </motion.div>
+
     </div>
   );
 }

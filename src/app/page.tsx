@@ -10,6 +10,8 @@ import FlowerBloom from '@/components/FlowerBloom';
 import DropperLevitation from '@/components/DropperLevitation';
 import BodyWashStatic from '@/components/BodyWashStatic';
 import AntigravitySuite from '@/components/AntigravitySuite';
+import AboutUs from '@/components/AboutUs';
+import Navbar from '@/components/Navbar';
 
 const Ballpit = dynamic(() => import('@/components/Ballpit'), {
   ssr: false,
@@ -296,23 +298,42 @@ function Hero() {
 }
 
 // ─── HOMEPAGE ─────────────────────────────────────────────────────────────────
-export default function HomePage() {
+
+export default function Home() {
   return (
     <>
+      <Navbar />
+
       <Hero />
-      {/* 200px section gap (as requested) */}
-      <div className="h-[200px] w-full bg-cream" />
+      {/* Seamless transition gradient from Ink Hero to Cream Scroll sections traversing user's requested colors */}
+      <div 
+        className="h-[30vh] w-full" 
+        style={{ background: 'linear-gradient(to bottom, #1E1B4B 0%, #1a1a4e 30%, #cac4e4 70%, #e5e0ff 100%)' }} 
+      />
       <FlowerBloom />
       
-      <div className="h-[200px] w-full bg-glass" />
+      <div className="h-[200px] w-full bg-cream" />
       <DropperLevitation />
       
       <div className="h-[200px] w-full bg-cream" />
       <BodyWashStatic />
       
-      <div className="h-[200px] w-full bg-cream" />
+      <div className="h-[100px] w-full bg-cream" />
+      
+      {/* Seamless transition gradient bridging the light cream layout explicitly into the dark blue start of The Rituals */}
+      <div 
+        className="h-[30vh] w-full" 
+        style={{ background: 'linear-gradient(to bottom, #e5e0ff 0%, #1a1a4e 100%)' }} 
+      />
       <AntigravitySuite />
+
+      {/* Seamless transition gradient bridging out of The Rituals final Blue Section back to the AboutUs Lavender */}
+      <div 
+        className="h-[30vh] w-full" 
+        style={{ background: 'linear-gradient(to bottom, #001B2E 0%, #0D1A63 100%)' }} 
+      />
+      
+      <AboutUs />
     </>
   );
 }
-

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -9,41 +9,77 @@ export default function BodyWashStatic() {
   const textRef = useRef<HTMLDivElement>(null);
   const bottleRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     
     if (!containerRef.current || !textRef.current || !bottleRef.current) return;
 
-    // A simple fade up for both sides when scrolling into view (not scrubbed, just a trigger)
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top 70%',
-      }
+    let ctx = gsap.context(() => {
+      const outlines = gsap.utils.toArray<SVGGeometryElement>(bottleRef.current!.querySelectorAll('.draw-path'));
+      const fillsGroup = bottleRef.current!.querySelector('.fade-fill');
+
+      // Setup initial state for drawing outlines
+      outlines.forEach(el => {
+        let length = 0;
+        if (el instanceof SVGPathElement) {
+          length = el.getTotalLength();
+        } else if (el instanceof SVGRectElement) {
+          const w = parseFloat(el.getAttribute('width') || '0');
+          const h = parseFloat(el.getAttribute('height') || '0');
+          length = (w + h) * 2;
+        }
+        gsap.set(el, {
+          strokeDasharray: length,
+          strokeDashoffset: length,
+          opacity: 0,
+        });
+      });
+
+      // Hide fills initially
+      gsap.set(fillsGroup, { opacity: 0 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: '+=300%', // 300vh scrolling duration
+          scrub: 1,
+          pin: true,
+        }
+      });
+
+      // 1. Draw Outlines
+      tl.to(outlines, {
+        strokeDashoffset: 0,
+        opacity: 1,
+        duration: 1.5,
+        stagger: 0.15,
+        ease: 'power2.inOut',
+      }, 0);
+
+      // 2. Fade in Fills (including blue liquid) after outlines are mostly drawn
+      tl.to(fillsGroup, {
+        opacity: 1,
+        duration: 1.0,
+        ease: 'power2.inOut',
+      }, 1.0);
+
+      // 3. Text fade in sync with the drawing
+      tl.fromTo(textRef.current!.children,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 1.0, stagger: 0.2, ease: 'power2.out' },
+        0.3
+      );
     });
 
-    tl.fromTo(textRef.current.children,
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: 'power2.out' },
-      0
-    );
-
-    tl.fromTo(bottleRef.current,
-      { opacity: 0, x: -40 },
-      { opacity: 1, x: 0, duration: 1.2, ease: 'power2.out' },
-      0.3
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={containerRef} className="min-h-screen w-full flex flex-col md:flex-row relative bg-cream">
+    <section ref={containerRef} className="h-screen w-full flex flex-col md:flex-row relative bg-cream overflow-hidden">
       
       {/* LEFT SIDE: Text */}
-      <div className="w-full md:w-1/2 min-h-[50vh] md:min-h-screen flex flex-col justify-center items-start px-8 md:pl-20 relative z-10">
+      <div className="w-full md:w-1/2 h-[50vh] md:h-full flex flex-col justify-center items-start px-8 md:pl-20 relative z-10">
         <div ref={textRef} className="max-w-md">
           <h2 className="font-serif italic text-5xl md:text-[4.5rem] leading-[1.1] text-foreground mb-6">
             Visual Design
@@ -58,17 +94,17 @@ export default function BodyWashStatic() {
         </div>
       </div>
 
-      {/* RIGHT SIDE: Static SVG Bottle drawing */}
-      <div className="w-full md:w-1/2 min-h-[50vh] md:min-h-screen flex items-center justify-center relative z-0">
+      {/* RIGHT SIDE: Animated SVG Bottle */}
+      <div className="w-full md:w-1/2 h-[50vh] md:h-full flex items-center justify-center relative z-0">
         <div ref={bottleRef} className="relative w-full max-w-sm flex justify-center">
           
           <svg 
-            width="140" 
-            height="320" 
+            width="180" 
+            height="400" 
             viewBox="0 0 140 320" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
-            className="drop-shadow-2xl"
+            className="drop-shadow-2xl overflow-visible"
           >
             {/* Liquid Gradient Definition */}
             <defs>
@@ -85,43 +121,49 @@ export default function BodyWashStatic() {
                 <stop offset="100%" stopColor="white" stopOpacity="0.1" />
               </linearGradient>
 
-              {/* Clip path for liquid slosh */}
+              {/* Clip path for liquid slosh inside bottle boundary */}
               <clipPath id="bottleClip">
                 <path d="M15 60 C5 60 5 70 5 180 C5 290 15 315 70 315 C125 315 135 290 135 180 C135 70 125 60 115 60 Z" />
               </clipPath>
             </defs>
 
-            {/* Static Cap (Flip Top) */}
-            <rect x="45" y="10" width="50" height="25" rx="4" fill="var(--sand)" stroke="var(--amber)" strokeWidth="0.5" />
-            <path d="M48 20 L92 20" stroke="rgba(200, 146, 42, 0.4)" strokeWidth="1" />
-            <rect x="55" y="5" width="30" height="5" rx="2" fill="var(--sand)" />
+            {/* --- OUTLINES (Drawn chronologically via GSAP) --- */}
+            {/* 1. Cap pieces */}
+            <rect className="draw-path" x="55" y="5" width="30" height="5" rx="2" fill="none" stroke="var(--amber)" strokeWidth="1" />
+            <rect className="draw-path" x="45" y="10" width="50" height="25" rx="4" fill="none" stroke="var(--amber)" strokeWidth="1" />
+            <path className="draw-path" d="M48 20 L92 20" fill="none" stroke="rgba(200, 146, 42, 0.6)" strokeWidth="1" />
             
-            {/* Bottle Neck outline */}
-            <rect x="50" y="35" width="40" height="25" fill="var(--glass)" stroke="rgba(255,255,255,0.8)" strokeWidth="1" />
+            {/* 2. Bottle Neck */}
+            <rect className="draw-path" x="50" y="35" width="40" height="25" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" />
 
-            {/* Bottle Main Body / Glass Boundary */}
-            <path d="M15 60 C5 60 5 70 5 180 C5 290 15 315 70 315 C125 315 135 290 135 180 C135 70 125 60 115 60 Z" 
-                  fill="var(--glass)" 
-                  stroke="white" 
-                  strokeWidth="2" />
+            {/* 3. Bottle Main Body */}
+            <path className="draw-path" d="M15 60 C5 60 5 70 5 180 C5 290 15 315 70 315 C125 315 135 290 135 180 C135 70 125 60 115 60 Z" fill="none" stroke="white" strokeWidth="2.5" />
             
-            {/* Liquid Fill Inside */}
-            <path d="M0 110 Q70 100 140 110 L140 320 L0 320 Z" 
-                  fill="url(#bodyWashLiquid)" 
-                  clipPath="url(#bottleClip)" />
+            {/* 4. Sharp side highlight */}
+            <path className="draw-path" d="M10 80 C8 150 8 250 15 290" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" opacity="0.8" />
 
-            {/* Glass Highlights / Glare */}
-            <path d="M15 60 C5 60 5 70 5 180 C5 290 15 315 70 315 C125 315 135 290 135 180 C135 70 125 60 115 60 Z" 
-                  fill="url(#glassReflection)" 
-                  pointerEvents="none" />
-            
-            {/* Sharp side highlight (left rim) */}
-            <path d="M10 80 C8 150 8 250 15 290" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.6" />
 
-            {/* Label Block */}
-            <rect x="30" y="160" width="80" height="60" rx="2" fill="var(--cream)" opacity="0.9" />
-            <text x="70" y="186" textAnchor="middle" fill="var(--foreground)" className="font-serif font-black" fontSize="11" letterSpacing="0.2em">OWN</text>
-            <text x="70" y="202" textAnchor="middle" fill="var(--amber)" className="font-sans" fontSize="6" letterSpacing="0.1em" opacity="0.8">BODY WASH</text>
+            {/* --- FILLS (Faded in after outlines construct the bottle) --- */}
+            <g className="fade-fill">
+              {/* Cap and Neck Base Fills */}
+              <rect x="55" y="5" width="30" height="5" rx="2" fill="var(--sand)" />
+              <rect x="45" y="10" width="50" height="25" rx="4" fill="var(--sand)" />
+              <rect x="50" y="35" width="40" height="25" fill="var(--glass)" />
+
+              {/* Bottle Body Base Fill */}
+              <path d="M15 60 C5 60 5 70 5 180 C5 290 15 315 70 315 C125 315 135 290 135 180 C135 70 125 60 115 60 Z" fill="var(--glass)" />
+              
+              {/* Liquid Fill */}
+              <path d="M0 110 Q70 100 140 110 L140 320 L0 320 Z" fill="url(#bodyWashLiquid)" clipPath="url(#bottleClip)" />
+
+              {/* Glass Glare */}
+              <path d="M15 60 C5 60 5 70 5 180 C5 290 15 315 70 315 C125 315 135 290 135 180 C135 70 125 60 115 60 Z" fill="url(#glassReflection)" pointerEvents="none" />
+              
+              {/* Label */}
+              <rect x="30" y="160" width="80" height="60" rx="3" fill="var(--cream)" opacity="0.9" />
+              <text x="70" y="186" textAnchor="middle" fill="var(--foreground)" className="font-serif font-black" fontSize="11" letterSpacing="0.2em">OWN</text>
+              <text x="70" y="202" textAnchor="middle" fill="var(--amber)" className="font-sans" fontSize="6" letterSpacing="0.1em" opacity="0.8">BODY WASH</text>
+            </g>
 
           </svg>
 

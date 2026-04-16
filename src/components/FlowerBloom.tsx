@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -63,63 +63,63 @@ export default function FlowerBloom() {
     return { petalPaths: petals, innerLines: lines, stamens: stmns, coreDots: dots };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     if (!containerRef.current || !svgRef.current || !textRef.current) return;
 
-    const paths = gsap.utils.toArray<SVGPathElement>(svgRef.current.querySelectorAll('.draw-path'));
-    const mainPetals = gsap.utils.toArray<SVGPathElement>(svgRef.current.querySelectorAll('.petal-main'));
-    
-    // Initial hidden state for stroke drawing
-    paths.forEach(path => {
-      const length = path.getTotalLength();
-      gsap.set(path, {
-        strokeDasharray: length,
-        strokeDashoffset: length,
-        opacity: 0,
+    let ctx = gsap.context(() => {
+      const paths = gsap.utils.toArray<SVGPathElement>(svgRef.current!.querySelectorAll('.draw-path'));
+      const mainPetals = gsap.utils.toArray<SVGPathElement>(svgRef.current!.querySelectorAll('.petal-main'));
+      
+      // Initial hidden state for stroke drawing
+      paths.forEach(path => {
+        const length = path.getTotalLength();
+        gsap.set(path, {
+          strokeDasharray: length,
+          strokeDashoffset: length,
+          opacity: 0,
+        });
       });
+
+      // Hide fill for main petals so strokes draw cleanly first
+      gsap.set(mainPetals, { fill: 'transparent' });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top top',
+          end: '+=300%', // 400vh total height
+          scrub: 1, 
+          pin: true,
+        }
+      });
+
+      // 1. Draw all outlines (staggered slightly so it looks like it's being sketched)
+      tl.to(paths, {
+        strokeDashoffset: 0,
+        opacity: 1,
+        duration: 1.5,
+        stagger: 0.015,
+        ease: 'power1.inOut',
+      }, 0);
+
+      // 2. Fade in the background cream color of the main petals so they overlap nicely (like paper)
+      tl.to(mainPetals, {
+        fill: 'var(--cream)',
+        duration: 0.5,
+        ease: 'power2.inOut',
+      }, 0.6);
+
+      // 3. Text fade in sync with bloom
+      tl.fromTo(textRef.current!.children, 
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.6, stagger: 0.2, ease: 'power2.out' },
+        0.3
+      );
     });
 
-    // Hide fill for main petals so strokes draw cleanly first
-    gsap.set(mainPetals, { fill: 'transparent' });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top top',
-        end: '+=300%', // 400vh total height
-        scrub: 1, 
-        pin: true,
-      }
-    });
-
-    // 1. Draw all outlines (staggered slightly so it looks like it's being sketched)
-    tl.to(paths, {
-      strokeDashoffset: 0,
-      opacity: 1,
-      duration: 1.5,
-      stagger: 0.015,
-      ease: 'power1.inOut',
-    }, 0);
-
-    // 2. Fade in the background cream color of the main petals so they overlap nicely (like paper)
-    tl.to(mainPetals, {
-      fill: 'var(--cream)',
-      duration: 0.5,
-      ease: 'power2.inOut',
-    }, 0.6);
-
-    // 3. Text fade in sync with bloom
-    tl.fromTo(textRef.current.children, 
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.6, stagger: 0.2, ease: 'power2.out' },
-      0.3
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
