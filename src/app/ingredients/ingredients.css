@@ -1,0 +1,314 @@
+/* ─────────────────────────────────────────────────────────────
+   Ingredients Page Styles
+   Extracted from JSX to fix Next.js SSR hydration mismatch
+───────────────────────────────────────────────────────────── */
+
+.ing-page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ing-bg-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.ing-noise {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+.ing-grid {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  padding: 0 5vw;
+}
+
+@media (max-width: 900px) {
+  .ing-page {
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
+  }
+  .ing-grid {
+    grid-template-columns: 1fr;
+    padding: 20px 6vw 60px;
+    gap: 2rem;
+  }
+}
+
+/* ── Info Panel ── */
+.ing-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ing-eyebrow {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1.25rem;
+}
+
+.ing-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(4rem, 7vw, 7.5rem);
+  line-height: 0.88;
+  font-weight: 300;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.ing-title em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.ing-subtitle {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.7;
+  max-width: 380px;
+  margin-bottom: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.ing-divider {
+  height: 1px;
+  width: 100%;
+  margin-bottom: 2rem;
+  border-radius: 1px;
+}
+
+/* ── Detail Block ── */
+.ing-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.ing-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ing-detail-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.ing-detail-tag {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 1px solid;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.ing-detail-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.ing-detail-latin {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: lowercase;
+  font-style: italic;
+  margin-bottom: 0.75rem;
+}
+
+.ing-detail-desc {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.75;
+  max-width: 420px;
+}
+
+/* ── Indicator Dots ── */
+.ing-dots {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.ing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Card Stack Wrapper ── */
+.ing-stack-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 15%;
+}
+
+.card-stack-root {
+  position: relative;
+  width: min(340px, 50vw);
+  height: min(430px, 62vh);
+  overflow: visible;
+}
+
+@media (max-width: 900px) {
+  .card-stack-root {
+    width: min(300px, 82vw);
+    height: min(380px, 60vw);
+  }
+}
+
+.card-stack-root ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Individual Card ── */
+.card-noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+.card-inner {
+  position: absolute;
+  inset: 0;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+}
+
+.card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.12);
+  line-height: 1;
+}
+
+.card-tag {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 1px solid;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+.card-name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.card-latin {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.35);
+  font-style: italic;
+}
+
+.card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.card-divider {
+  height: 1px;
+  border-radius: 1px;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.card-profile {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.card-desc {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.7;
+}
+
+.card-drag-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  align-self: center;
+}
