@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import LiquidBackground from '@/components/LiquidBackground';
 
 /* ─────────────────────── PRODUCT DATA ─────────────────────── */
 const PRODUCTS = [
@@ -76,67 +77,98 @@ function Bottle({ base, text, subtitle }: { base: string; text: string; subtitle
       }}>
         <div style={{ position: 'absolute', top: 55, bottom: 70, left: 16, width: 26, background: 'rgba(255,255,255,0.45)', borderRadius: 99, filter: 'blur(7px)' }} />
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingTop: 10 }}>
-          <span className="font-serif font-black tracking-tighter" style={{ color: text, fontSize: '8.5rem', lineHeight: 0.82, transform: 'scaleY(1.12)', display: 'block' }}>OWN</span>
+          <motion.span
+            animate={{ x: [-0.5, 0.5, -0.5], filter: ['contrast(1.1)', 'contrast(1.0)', 'contrast(1.1)'] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            className="font-serif font-black tracking-tighter"
+            style={{ color: text, fontSize: '8.5rem', lineHeight: 0.82, transform: 'scaleY(1.12)', display: 'block' }}
+          >
+            OWN
+          </motion.span>
           <div style={{ width: 64, height: 1, background: text, opacity: 0.35, margin: '16px 0 12px' }} />
-          <span className="font-serif italic font-bold tracking-widest text-center px-5" style={{ color: text, fontSize: '0.78rem' }}>{subtitle}</span>
+          <motion.span
+            animate={{ opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            className="font-serif italic font-bold tracking-widest text-center px-5"
+            style={{ color: text, fontSize: '0.78rem' }}
+          >
+            {subtitle}
+          </motion.span>
         </div>
       </div>
     </div>
   );
 }
 
-/* ─────────────────────── LIQUID BACKGROUND ─────────────────────── */
-function LiquidBackground({ color1, color2 }: { color1: string; color2: string }) {
+/* ─────────────────────── FABRIC BACKGROUND ─────────────────────── */
+function FabricBackground({ color1, color2 }: { color1: string; color2: string }) {
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
-      {/* Large flowing orb 1 */}
+    <div className="fixed inset-0 overflow-hidden pointer-events-none bg-[#050508]" style={{ zIndex: 0 }}>
+      {/* Base deep glow */}
+      <div className="absolute inset-0 opacity-20" style={{ background: `radial-gradient(circle at 50% 50%, ${color1} 0%, transparent 80%)` }} />
+
+      {/* Fabric Layer 1 - Main flow */}
       <div
+        className="absolute top-[-20%] left-[-10%] w-[120%] h-[140%]"
         style={{
-          position: 'absolute', width: '55vw', height: '55vw', borderRadius: '40% 60% 55% 45% / 55% 40% 60% 45%',
-          background: `radial-gradient(circle, ${color1} 0%, transparent 70%)`,
-          top: '10%', left: '15%', filter: 'blur(80px)',
-          animation: 'liquidFlow1 14s ease-in-out infinite',
-          transition: 'background 1.8s ease',
+          background: `linear-gradient(135deg, transparent 0%, ${color1}22 25%, transparent 50%, ${color2}15 75%, transparent 100%)`,
+          animation: 'fabricWave 22s ease-in-out infinite',
+          filter: 'blur(60px)',
+          opacity: 0.6
         }}
       />
-      {/* Large flowing orb 2 */}
+
+      {/* Fabric Layer 2 - Occasional sheen */}
       <div
+        className="absolute bottom-[-10%] right-[-10%] w-[100%] h-[120%]"
         style={{
-          position: 'absolute', width: '45vw', height: '45vw', borderRadius: '55% 45% 40% 60% / 45% 55% 45% 55%',
-          background: `radial-gradient(circle, ${color2} 0%, transparent 70%)`,
-          bottom: '5%', right: '10%', filter: 'blur(70px)',
-          animation: 'liquidFlow2 18s ease-in-out infinite',
-          transition: 'background 1.8s ease',
+          background: `linear-gradient(45deg, transparent 0%, ${color2}20 30%, transparent 60%, ${color1}10 90%, transparent 100%)`,
+          animation: 'fabricWave 18s ease-in-out infinite reverse',
+          filter: 'blur(80px)',
+          opacity: 0.4
         }}
       />
-      {/* Small accent blob */}
+
+      {/* Floating silk 'folds' (using skewed divs) */}
       <div
+        className="absolute top-[10%] left-[20%] w-[60vw] h-[40vh] rotate-12"
         style={{
-          position: 'absolute', width: '25vw', height: '25vw', borderRadius: '60% 40% 50% 50% / 50% 60% 40% 50%',
-          background: `radial-gradient(circle, ${color1} 0%, transparent 70%)`,
-          top: '55%', left: '3%', filter: 'blur(55px)', opacity: 0.6,
-          animation: 'liquidFlow3 11s ease-in-out infinite',
-          transition: 'background 1.8s ease',
+          background: `linear-gradient(90deg, transparent, ${color1}15, transparent)`,
+          filter: 'blur(50px)',
+          animation: 'silkShimmer 12s ease-in-out infinite',
         }}
       />
-      {/* Extra top-right blob */}
       <div
+        className="absolute bottom-[20%] right-[10%] w-[50vw] h-[30vh] -rotate-12"
         style={{
-          position: 'absolute', width: '30vw', height: '30vw', borderRadius: '45% 55% 60% 40% / 60% 45% 55% 45%',
-          background: `radial-gradient(circle, ${color2} 0%, transparent 70%)`,
-          top: '-5%', right: '20%', filter: 'blur(65px)', opacity: 0.4,
-          animation: 'liquidFlow1 16s ease-in-out infinite 3s',
-          transition: 'background 1.8s ease',
+          background: `linear-gradient(90deg, transparent, ${color2}10, transparent)`,
+          filter: 'blur(70px)',
+          animation: 'silkShimmer 15s ease-in-out infinite 2s',
         }}
       />
-      {/* Floating particles */}
-      {Array.from({ length: 25 }, (_, i) => (
+
+      {/* Fine particles (Dust in the light) */}
+      {Array.from({ length: 40 }, (_, i) => (
         <motion.div
           key={i}
           className="absolute rounded-full bg-white"
-          animate={{ opacity: [0.03, 0.2, 0.03], y: [0, -15, 0] }}
-          transition={{ duration: 4 + (i % 5), repeat: Infinity, delay: (i * 0.5) % 6, ease: 'easeInOut' }}
-          style={{ width: 1 + (i % 3), height: 1 + (i % 3), left: `${(i * 29.7) % 100}%`, top: `${(i * 41.3) % 100}%` }}
+          animate={{
+            opacity: [0.02, 0.15, 0.02],
+            y: [0, -30, 0],
+            x: [0, (i % 2 === 0 ? 10 : -10), 0]
+          }}
+          transition={{
+            duration: 5 + (i % 7),
+            repeat: Infinity,
+            delay: (i * 0.3) % 8,
+            ease: 'easeInOut'
+          }}
+          style={{
+            width: 0.5 + (i % 2),
+            height: 0.5 + (i % 2),
+            left: `${(i * 17.7) % 100}%`,
+            top: `${(i * 31.3) % 100}%`,
+          }}
         />
       ))}
     </div>
@@ -233,8 +265,8 @@ function ProgressBars({ activeIndex, segmentProgress, accent, glow }: {
                 style={{
                   width: `${fill * 100}%`,
                   background: accent,
-                  boxShadow: fill > 0 ? `0 0 8px ${glow}` : 'none',
-                  transition: i === activeIndex ? 'none' : 'width 0.4s ease',
+                  boxShadow: fill > 0 ? `0 0 12px ${glow}, 0 0 4px white` : 'none',
+                  transition: i === activeIndex ? 'none' : 'width 0.6s cubic-bezier(0.22, 1, 0.36, 1)',
                 }}
               />
             </div>
@@ -299,17 +331,28 @@ export default function ShopPage() {
   }, []);
 
   return (
-    <div ref={containerRef} className="shop-grain" style={{ backgroundColor: '#0A0A0F' }}>
-
+    <div ref={containerRef} className="shop-grain bg-black">
       {/* ═══════════ LIQUID BACKGROUND (always visible, flowing) ═══════════ */}
-      <LiquidBackground color1={product.orbColor1} color2={product.orbColor2} />
+      <div className="fixed inset-0 z-0 pointer-events-none bg-black">
+         <LiquidBackground 
+            color1="#FF2A85" 
+            color2="#311B92" 
+            color3="#050508"
+            speed={20}
+            scale={1.5}
+            swirl={0.4}
+            distortion={0.15}
+            softness={0.9}
+            swirlIterations={4}
+         />
+      </div>
 
       {/* ═══════════ INTRO SECTION ═══════════ */}
       <div ref={introRef} className="relative z-10 min-h-screen flex flex-col items-center justify-center px-8">
         {/* Materializing title — characters appear out of thin air */}
         <MaterializingText
           text="The Rituals"
-          className="font-serif italic text-white/90 tracking-tighter leading-none"
+          className="font-serif italic text-white/95 tracking-tighter leading-none"
           style={{ fontSize: 'clamp(3.5rem, 10vw, 9rem)' }}
         />
 
@@ -334,15 +377,15 @@ export default function ShopPage() {
       </div>
 
       {/* ═══════════ PINNED PRODUCT SHOWCASE ═══════════ */}
-      <div ref={pinnedRef} className="relative z-10 w-full h-screen flex items-center justify-center overflow-hidden">
+      <div ref={pinnedRef} className="relative z-10 w-full h-screen flex items-center justify-center">
 
         {/* ── Content wrapper ── */}
         <div className="relative z-10 w-full max-w-7xl mx-auto px-8 md:px-16 flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
 
-          {/* LEFT: Product bottle — floaty + larger */}
-          <div className="w-full lg:w-[55%] flex items-center justify-center relative" style={{ minHeight: 520 }}>
+          {/* LEFT: Product bottle — floaty + larger + Fix top crop */}
+          <div className="w-full lg:w-[55%] flex items-center justify-center relative pt-10" style={{ minHeight: 650 }}>
             {/* Radial glow behind bottle */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               <motion.div
                 key={`glow-${product.id}`}
                 initial={{ opacity: 0, scale: 0.6 }}
@@ -359,21 +402,21 @@ export default function ShopPage() {
             </AnimatePresence>
 
             {/* Floating bottle */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               <motion.div
                 key={`bottle-${product.id}`}
                 initial={{ opacity: 0, x: 150, scale: 0.75, rotate: -5 }}
                 animate={{
                   opacity: 1, x: 0, scale: 1, rotate: 0,
-                  y: [0, -12, 0],
+                  y: [0, -20, 0],
                 }}
                 exit={{ opacity: 0, x: -150, scale: 0.7, rotate: 5 }}
                 transition={{
-                  opacity: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-                  x: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-                  scale: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-                  rotate: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-                  y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+                  opacity: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+                  x: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+                  scale: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+                  rotate: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+                  y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
                 }}
                 className="relative z-10"
               >
@@ -384,7 +427,7 @@ export default function ShopPage() {
 
           {/* RIGHT: Product info */}
           <div className="w-full lg:w-[45%] flex flex-col justify-center">
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               <motion.div
                 key={`info-${product.id}`}
                 initial={{ opacity: 0, y: 50, filter: 'blur(10px)' }}
@@ -440,18 +483,21 @@ export default function ShopPage() {
                   </span>
                   <Link
                     href={`/shop/${product.id}`}
-                    className="group inline-flex items-center gap-3 px-8 py-3.5 rounded-full text-[0.65rem] font-bold uppercase tracking-[0.25em] transition-all duration-300 hover:scale-105 active:scale-95"
+                    className="group relative overflow-hidden inline-flex items-center gap-3 px-8 py-3.5 rounded-full text-[0.65rem] font-bold uppercase tracking-[0.25em] transition-all duration-300 hover:scale-105 active:scale-95 shadow-2xl"
                     style={{
                       background: product.accent,
                       color: '#0A0A0F',
                       boxShadow: `0 8px 32px ${product.glow}`,
                     }}
                   >
-                    <span>Shop Now</span>
+                    {/* Shimmer overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                    
+                    <span className="relative z-10">Shop Now</span>
                     <motion.span
                       animate={{ x: [0, 4, 0] }}
                       transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-                      className="inline-block"
+                      className="relative z-10 inline-block"
                     >→</motion.span>
                   </Link>
                 </div>

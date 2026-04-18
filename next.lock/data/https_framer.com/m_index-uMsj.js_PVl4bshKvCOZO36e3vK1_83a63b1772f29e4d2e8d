@@ -1,0 +1,8 @@
+/*
+ * index
+ *
+ * Learn More: https://www.framer.com/asset-urls
+ */
+
+export * from "https://framerusercontent.com/modules/q3nWgGXMhG0Ina6vgRVz/PVl4bshKvCOZO36e3vK1/index.js"
+export { default } from "https://framerusercontent.com/modules/q3nWgGXMhG0Ina6vgRVz/PVl4bshKvCOZO36e3vK1/index.js"

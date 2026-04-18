@@ -1,0 +1,8 @@
+/*
+ * AnimatedLiquidBackground_Prod
+ *
+ * Learn More: https://www.framer.com/asset-urls
+ */
+
+export * from "https://framerusercontent.com/modules/xx99X8dO7V1Egbc8GwnH/ghH1aHLmGZ0iE7qXDFVk/AnimatedLiquidBackground_Prod.js"
+export { default } from "https://framerusercontent.com/modules/xx99X8dO7V1Egbc8GwnH/ghH1aHLmGZ0iE7qXDFVk/AnimatedLiquidBackground_Prod.js"

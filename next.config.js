@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  // Configured for OWN Beauty performance
+};
 
 module.exports = nextConfig;
