@@ -3,6 +3,7 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Carousel3D from '@/components/Carousel3D';
 
 export default function OurStoryPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -59,6 +60,15 @@ export default function OurStoryPage() {
           Own 
           <br className="block md:hidden"/> The Energy.
         </h1>
+      </div>
+
+      {/* 3D Carousel Section */}
+      <div className="w-full relative py-20 px-4 md:px-8 overflow-hidden bg-[#050505] mb-32 rounded-[3rem] mx-auto max-w-[95%] shadow-[0_0_100px_inset_rgba(0,0,0,1)]">
+        <div className="relative z-10 w-full mb-12 text-center text-[#E5E0FF]">
+          <h2 className="font-serif italic text-4xl md:text-5xl opacity-90">Visualizing the Essence</h2>
+          <p className="font-sans text-xs tracking-widest mt-4 opacity-60 uppercase">Interact to Pause</p>
+        </div>
+        <Carousel3D />
       </div>
 
       {/* Split Screen Container */}
