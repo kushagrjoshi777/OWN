@@ -39,18 +39,18 @@
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: center;
-  padding: 0 5vw;
+  padding: 110px 5vw 0;
 }
 
 @media (max-width: 900px) {
   .ing-page {
     height: auto;
-    min-height: 100vh;
+    min-height: 100dvh;
     overflow: auto;
   }
   .ing-grid {
     grid-template-columns: 1fr;
-    padding: 20px 6vw 60px;
+    padding: 100px 6vw 60px;
     gap: 2rem;
   }
 }

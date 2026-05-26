@@ -105,7 +105,7 @@ function Hero() {
 
   return (
     <section
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      className="relative min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden"
       style={{ background: C.ink }}
     >
       <style>{`

@@ -203,8 +203,8 @@ export default function AntigravitySuite() {
         </div>
 
         {/* CENTER TEXT OVERLAY */}
-        <div ref={textTitleRef} className="relative z-30 text-center max-w-3xl px-6 pointer-events-none overflow-visible mix-blend-difference">
-          <h2 className="font-serif italic text-6xl md:text-[9rem] tracking-tight leading-[1] text-white py-10 opacity-100">
+        <div ref={textTitleRef} className="relative z-30 text-center max-w-3xl px-6 pointer-events-none overflow-visible mix-blend-difference mt-20 md:mt-0">
+          <h2 className="font-serif italic text-5xl md:text-[9rem] tracking-tight leading-[1] text-white py-10 opacity-100">
             The Rituals
           </h2>
         </div>
@@ -220,7 +220,7 @@ export default function AntigravitySuite() {
       {/* =========================================
           SECTION 2: HORIZONTAL SLIDING DETAILS
           ========================================= */}
-      <section ref={sliderContainerRef} className="h-screen w-full overflow-hidden relative" style={{ backgroundColor: RITUALS[0].bg }}>
+      <section ref={sliderContainerRef} className="h-[100dvh] w-full overflow-hidden relative" style={{ backgroundColor: RITUALS[0].bg }}>
         
         {/* Background subtle noise/texture */}
         <div 
@@ -244,7 +244,7 @@ export default function AntigravitySuite() {
 
               {/* RIGHT SIDE: Description */}
               <div className="w-full md:w-1/2 flex flex-col justify-center items-center md:items-start text-center md:text-left text-white mt-10 md:mt-0">
-                <h2 className="font-serif italic text-6xl md:text-[5.5rem] mb-4 leading-none" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+                <h2 className="font-serif italic text-4xl md:text-[5.5rem] mb-4 leading-none" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
                   {ritual.title}
                 </h2>
                 <p className="font-sans text-lg md:text-xl uppercase tracking-widest text-white/70 mb-10">

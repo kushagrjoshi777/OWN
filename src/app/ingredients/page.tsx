@@ -303,8 +303,6 @@ export default function IngredientsPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
         >
-          <p className="ing-eyebrow">The Formulation</p>
-
           <h1 className="ing-title">
             Naked<br />
             <em>Truth.</em>

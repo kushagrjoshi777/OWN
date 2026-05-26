@@ -123,7 +123,7 @@ export default function FlowerBloom() {
   }, []);
 
   return (
-    <section ref={containerRef} className="h-screen w-full flex flex-col md:flex-row relative bg-cream overflow-hidden">
+    <section ref={containerRef} className="h-[100dvh] w-full flex flex-col md:flex-row relative bg-cream overflow-hidden">
       
       {/* LEFT SIDE: Hand-drawn Flower Line Art */}
       <div className="w-full md:w-1/2 h-[50vh] md:h-full flex items-center justify-start md:-ml-20 relative z-0 pointer-events-none">
@@ -195,7 +195,7 @@ export default function FlowerBloom() {
         className="w-full md:w-1/2 h-[50vh] md:h-full flex flex-col justify-center items-start px-8 md:pl-16 relative z-10"
       >
         <div ref={textRef} className="max-w-lg">
-          <h2 className="font-serif italic text-6xl md:text-[5rem] leading-none text-foreground mb-4">
+          <h2 className="font-serif italic text-4xl md:text-[5rem] leading-none text-foreground mb-4">
             Fragrance
           </h2>
           <p className="font-sans text-xl md:text-2xl font-light tracking-wide text-amber uppercase">

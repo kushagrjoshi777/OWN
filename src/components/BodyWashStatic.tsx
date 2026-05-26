@@ -76,12 +76,12 @@ export default function BodyWashStatic() {
   }, []);
 
   return (
-    <section ref={containerRef} className="h-screen w-full flex flex-col md:flex-row relative bg-cream overflow-hidden">
+    <section ref={containerRef} className="h-[100dvh] w-full flex flex-col md:flex-row relative bg-cream overflow-hidden">
       
       {/* LEFT SIDE: Text */}
       <div className="w-full md:w-1/2 h-[50vh] md:h-full flex flex-col justify-center items-start px-8 md:pl-20 relative z-10">
         <div ref={textRef} className="max-w-md">
-          <h2 className="font-serif italic text-5xl md:text-[4.5rem] leading-[1.1] text-foreground mb-6">
+          <h2 className="font-serif italic text-4xl md:text-[4.5rem] leading-[1.1] text-foreground mb-6">
             Visual Design
           </h2>
           <p className="font-sans text-xl font-light tracking-wide text-amber uppercase">
